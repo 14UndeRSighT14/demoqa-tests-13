@@ -3,14 +3,13 @@ package tests;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$;
 
-public class PractiseFormTests {
+public class PracticeFormTests {
 
     @BeforeAll
     static void beforeAll() {
@@ -71,9 +70,16 @@ public class PractiseFormTests {
         $("#submit").click();
 
         $(".modal-content").shouldHave(text("Thanks for submitting the form"),
-                text(firstName+" "+lastName),text(userEmail),text(gender),
-                text(userNumber),text(dayOfBirth+" "+monthOfBirth+","+yearOfBirth),text(subject),
-                text(hobby),text(fileName),text(currentAddress),text(state+" "+city));
+                text(firstName + " " + lastName),
+                text(userEmail),
+                text(gender),
+                text(userNumber),
+                text(dayOfBirth + " " + monthOfBirth + "," + yearOfBirth),
+                text(subject),
+                text(hobby),
+                text(fileName),
+                text(currentAddress),
+                text(state + " " + city));
 
     }
 }
