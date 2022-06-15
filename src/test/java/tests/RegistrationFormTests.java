@@ -1,22 +1,12 @@
 package tests;
 
-import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selenide.$;
 
-public class PracticeFormTests {
-
-    @BeforeAll
-    static void beforeAll() {
-        Configuration.baseUrl = "https://demoqa.com";
-        Configuration.browserSize = "1280x1024";
-    }
-
+public class RegistrationFormTests extends TestBase {
     @Test
     void successTest() {
         String firstName = "Slava";
@@ -35,9 +25,11 @@ public class PracticeFormTests {
         String city = "Jaipur";
 
         open("/automation-practice-form");
+        $(".practice-form-wrapper").shouldHave(text("Student Registration Form"));
 
         executeJavaScript("$('footer').remove()");
         executeJavaScript("$('#fixedban').remove()");
+
 
         $("#firstName").setValue(firstName);
         $("#lastName").setValue(lastName);
@@ -51,35 +43,38 @@ public class PracticeFormTests {
         $("#dateOfBirthInput").click();
         $(".react-datepicker__month-select").selectOption(monthOfBirth);
         $(".react-datepicker__year-select").selectOption(yearOfBirth);
-        $(byText(dayOfBirth)).click();
+        $(".react-datepicker__day--0" + dayOfBirth + ":not(.react-datepicker__day--outside-month)").click();
 
         $("#subjectsInput").sendKeys(subject);
         $("#subjectsInput").pressEnter();
 
         $("#hobbiesWrapper").$(byText(hobby)).click();
 
-        $("#uploadPicture").uploadFromClasspath(fileName);
+        $("#uploadPicture").uploadFromClasspath("img/" + fileName);
 
         $("#currentAddress").setValue(currentAddress);
 
         $("#state").click();
-        $(byText(state)).click();
+        $("#stateCity-wrapper").$(byText(state)).click();
         $("#city").click();
-        $(byText(city)).click();
+        $("#stateCity-wrapper").$(byText(city)).click();
 
         $("#submit").click();
 
-        $(".modal-content").shouldHave(text("Thanks for submitting the form"),
-                text(firstName + " " + lastName),
-                text(userEmail),
-                text(gender),
-                text(userNumber),
-                text(dayOfBirth + " " + monthOfBirth + "," + yearOfBirth),
-                text(subject),
-                text(hobby),
-                text(fileName),
-                text(currentAddress),
-                text(state + " " + city));
+        $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
+        checkTable("Student Name", firstName + " " + lastName);
+        checkTable("Student Email", userEmail);
+        checkTable("Gender", gender);
+        checkTable("Mobile", userNumber);
+        checkTable("Date of Birth", dayOfBirth + " " + monthOfBirth + "," + yearOfBirth);
+        checkTable("Subjects", subject);
+        checkTable("Hobbies", hobby);
+        checkTable("Picture", fileName);
+        checkTable("Address", currentAddress);
+        checkTable("State and City", state + " " + city);
+    }
 
+    void checkTable(String key, String value) {
+        $(".table-responsive").$(byText(key)).parent().shouldHave(text(value));
     }
 }
